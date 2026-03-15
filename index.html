@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video CEWEK INDONESIA TERBARU</title>
+
+<style>
+
+body{
+margin:0;
+background:#0f0f0f;
+font-family:Arial;
+color:white;
+}
+
+header{
+text-align:center;
+padding:15px;
+background:#1a1a1a;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:10px;
+padding:10px;
+}
+
+.card{
+background:#1a1a1a;
+border-radius:8px;
+overflow:hidden;
+cursor:pointer;
+}
+
+.card video{
+width:100%;
+height:120px;
+object-fit:cover;
+}
+
+.title{
+font-size:13px;
+padding:8px;
+}
+
+.player{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+.player video{
+width:95%;
+max-width:800px;
+}
+
+.close{
+position:absolute;
+top:10px;
+right:15px;
+font-size:28px;
+cursor:pointer;
+}
+
+.pagination{
+text-align:center;
+padding:20px;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:20px;
+margin:5px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>Video Viral Terbaru</h2>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="pagination">
+<button onclick="prevPage()">Prev</button>
+<button onclick="nextPage()">Next</button>
+</div>
+
+<div class="player" id="player">
+<span class="close" onclick="closePlayer()">✕</span>
+<video id="mainVideo" controls autoplay></video>
+</div>
+
+<script>
+
+const ad="https://otieu.com/4/10005133";
+
+const videoList=[
+
+"https://cdn.videy.co/Z0v5uG301.mp4",
+"https://cdn.videy.co/GFj915yT1.mp4",
+"https://cdn.videy.co/0PQOFNNM1.mp4",
+"https://cdn.videy.co/rbuMntLp2.mp4",
+"https://cdn.videy.co/aOrakN0Za2.mp4",
+"https://cdn.videy.co/LNppdmXZ2.mp4",
+"https://cdn.videy.co/QByF9TK21.mp4",
+"https://cdn.videy.co/X5JBlNAZ1.mp4",
+"https://cdn.videy.co/jSOeVEpz1.mp4",
+"https://cdn.videy.co/dvOyfBfE1.mp4",
+"https://cdn.videy.co/N52jh7Rk1.mp4",
+"https://cdn.videy.co/NIi63CRb1.mp4",
+"https://cdn.videy.co/iZFp3IrA1.mp4",
+"https://cdn.videy.co/ha4WQJGP1.mp4",
+"https://cdn.videy.co/Qu6F3R111.mp4",
+
+"https://cdn.videy.co/UvNBtFvi1.mp4",
+"https://cdn.videy.co/471RbQEY1.mp4",
+"https://cdn.videy.co/6Um5Pk7g1.mp4",
+"https://cdn.videy.co/npzChoqB1.mp4",
+"https://cdn.videy.co/26uDpwuQ1.mp4",
+"https://cdn.videy.co/1BtLHeSc1.mp4",
+"https://cdn.videy.co/3uBeNyFk1.mp4",
+"https://cdn.videy.co/xqkQQTWz1.mp4",
+"https://cdn.videy.co/xo5gI9ZD1.mp4",
+"https://cdn.videy.co/LuFATIdV1.mp4",
+"https://cdn.videy.co/nEs0X5pO1.mp4",
+"https://cdn.videy.co/cQYoSduX1.mp4",
+"https://cdn.videy.co/WH9jFYQL1.mp4",
+
+"https://cdn.videy.co/ibw7jkUw1.mp4",
+"https://cdn.videy.co/n3V1krYq1.mp4",
+"https://cdn.videy.co/g2rJby0I1.mp4",
+"https://cdn.videy.co/mMFggAJK1.mp4",
+"https://cdn.videy.co/VIU1TfVz1.mp4",
+"https://cdn.videy.co/CnIqUbfc1.mp4",
+"https://cdn.videy.co/p0Uwz0AU1.mp4",
+"https://cdn.videy.co/4Ei39Vou1.mp4",
+"https://cdn.videy.co/B6MM1T6l1.mp4",
+"https://cdn.videy.co/rmjprOCf1.mp4",
+
+"https://cdn.videy.co/UuwdEv1D1.mp4",
+"https://cdn.videy.co/h6AwnTHf1.mp4",
+"https://cdn.videy.co/WtltABVi1.mp4",
+"https://cdn.videy.co/9FdLlWmC1.mp4",
+"https://cdn.videy.co/lZyH04I01.mp4",
+"https://cdn.videy.co/I4Y8g9JP1.mp4",
+"https://cdn.videy.co/2aBrgRfq1.mp4",
+"https://cdn.videy.co/0Kte15cg1.mp4",
+"https://cdn.videy.co/pU3nnXIQ1.mp4",
+"https://cdn.videy.co/DMQnBLBm1.mp4",
+"https://cdn.videy.co/Jaa0vKSh1.mp4",
+"https://cdn.videy.co/DrrtQXbv1.mp4",
+"https://cdn.videy.co/qijpGrKU1.mp4",
+"https://cdn.videy.co/vDsuJHNh1.mp4",
+"https://cdn.videy.co/lw4leMRp1.mp4"
+
+];
+
+let page=1;
+const perPage=8;
+
+function renderVideos(){
+
+const grid=document.getElementById("grid");
+
+grid.innerHTML="";
+
+let start=(page-1)*perPage;
+let end=start+perPage;
+
+videoList.slice(start,end).forEach(v=>{
+
+let card=document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+
+<video src="${v[0]}" muted preload="metadata"></video>
+
+<div class="title">${v[1]}</div>
+
+`;
+
+card.onclick=()=>{
+
+document.getElementById("mainVideo").src=v[0];
+
+document.getElementById("player").style.display="flex";
+
+window.open(ad,"_blank");
+
+};
+
+grid.appendChild(card);
+
+});
+
+}
+
+function nextPage(){
+
+if(page*perPage<videoList.length){
+
+page++;
+
+renderVideos();
+
+}
+
+}
+
+function prevPage(){
+
+if(page>1){
+
+page--;
+
+renderVideos();
+
+}
+
+}
+
+function closePlayer(){
+
+document.getElementById("player").style.display="none";
+
+document.getElementById("mainVideo").pause();
+
+}
+
+renderVideos();
+
+</script>
+
+</body>
+</html>
